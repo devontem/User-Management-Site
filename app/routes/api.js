@@ -11,6 +11,33 @@ module.exports = function(app, express){
     // get an instance of the express router
     var apiRouter = express.Router();
     
+    // route to generate sample user to start using 
+	apiRouter.post('/sample', function(req, res) {
+
+		// look for the user named chris
+		User.findOne({ 'username': 'chris' }, function(err, user) {
+
+			// if there is no chris user, create one
+			if (!user) {
+				var sampleUser = new User();
+
+				sampleUser.name = 'Chris';  
+				sampleUser.username = 'chris'; 
+				sampleUser.password = 'supersecret';
+
+				sampleUser.save();
+			} else {
+				console.log(user);
+
+				// if there is a chris, update his password
+				user.password = 'supersecret';
+				user.save();
+			}
+
+		});
+
+	});
+    
     //authenticating a user => /api/authenticate
     apiRouter.post('/authenticate', function(req, res) {
     
